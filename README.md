@@ -87,3 +87,4 @@ REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
 # CoolBreeze
 # Cool_Breeze
 # Cool_Breeze
+# Cool_Breeze
