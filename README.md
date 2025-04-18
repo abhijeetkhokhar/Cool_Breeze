@@ -85,3 +85,4 @@ REACT_APP_API_URL=http://localhost:5000
 REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 # CoolBreeze
+# Cool_Breeze
