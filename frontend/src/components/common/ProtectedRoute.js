@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const ProtectedRoute = ({ children, adminOnly = false, riderOnly = false }) => {
-  const { isAuthenticated, isAdmin, isRider, loading } = useAuth();
+const ProtectedRoute = ({ children, adminOnly = false }) => {
+  const { isAuthenticated, isAdmin, loading } = useAuth();
 
   if (loading) {
     return (
@@ -21,9 +21,7 @@ const ProtectedRoute = ({ children, adminOnly = false, riderOnly = false }) => {
     return <Navigate to="/" />;
   }
 
-  if (riderOnly && !isRider) {
-    return <Navigate to="/" />;
-  }
+
 
   return children;
 };

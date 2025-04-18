@@ -14,9 +14,10 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
-import OrdersPage from './pages/OrdersPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import OrdersPage from './pages/OrdersPage';
 import NotFoundPage from './pages/NotFoundPage';
+
 
 // Protected Route Component
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -68,8 +69,10 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          <Route path="/orders/:orderId" element={<OrderConfirmationPage />} />
-          <Route path="/orders" element={<OrderConfirmationPage />} />
+          <Route 
+            path="/orders/:orderId" 
+            element={<OrderConfirmationPage />} 
+          />
           
           {/* 404 Page */}
           <Route path="*" element={<NotFoundPage />} />

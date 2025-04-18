@@ -65,7 +65,7 @@ const HomePage = () => {
               {featuredProducts.slice(0, 4).map((product) => (
                 <Link
                   key={product._id}
-                  to={`/products/${product._id}`}
+                  to={`/products`}
                   className="card hover:shadow-lg transition-shadow block"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >

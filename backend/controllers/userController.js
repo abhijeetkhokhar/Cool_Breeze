@@ -129,7 +129,7 @@ const deleteApprovedEmail = async (req, res) => {
 
 module.exports = {
   getUsers,
-  getRiders,
+  
   updateUserProfile,
   addApprovedEmail,
   getApprovedEmails,

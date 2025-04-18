@@ -69,10 +69,7 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Paid', 'Shipped', 'Delivered', 'Undelivered', 'Cancelled'],
     default: 'Pending'
   },
-  rider: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
+
   isPaid: {
     type: Boolean,
     required: true,

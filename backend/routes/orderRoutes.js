@@ -25,10 +25,7 @@ router.get('/', protect, admin, getOrders);
 // @access  Private
 router.get('/myorders', protect, getMyOrders);
 
-// @route   GET /api/orders/rider
-// @desc    Get orders assigned to rider
-// @access  Private/Rider
-router.get('/rider', protect, rider, getRiderOrders);
+
 
 // @route   GET /api/orders/:id
 // @desc    Get order by ID

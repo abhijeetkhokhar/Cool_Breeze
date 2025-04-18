@@ -9,7 +9,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import DashboardPage from './pages/DashboardPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
-import RidersPage from './pages/RidersPage';
+
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -35,7 +35,6 @@ const App = () => {
         <Route index element={<DashboardPage />} />
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:id" element={<OrderDetailPage />} />
-        <Route path="riders" element={<RidersPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 

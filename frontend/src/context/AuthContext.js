@@ -99,8 +99,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
-        isRider: user?.role === 'rider'
+        isAdmin: user?.role === 'admin'
       }}
     >
       {children}

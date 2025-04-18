@@ -26,9 +26,6 @@ const DashboardPage = () => {
         // Fetch orders
         const { data: orders } = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`);
         
-        // Fetch riders
-        const { data: riders } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/riders`);
-        
         // Calculate stats
         const pendingOrders = orders.filter(order => order.status === 'Pending' || order.status === 'Paid').length;
         const shippedOrders = orders.filter(order => order.status === 'Shipped').length;
@@ -39,7 +36,7 @@ const DashboardPage = () => {
           pendingOrders,
           shippedOrders,
           deliveredOrders,
-          totalRiders: riders.length
+          totalRiders: 0
         });
         
         // Get recent orders (last 5)

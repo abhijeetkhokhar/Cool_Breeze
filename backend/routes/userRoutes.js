@@ -18,7 +18,7 @@ router.get('/', protect, admin, getUsers);
 // @route   GET /api/users/riders
 // @desc    Get all riders
 // @access  Private/Admin
-router.get('/riders', protect, admin, getRiders);
+
 
 // @route   PUT /api/users/profile
 // @desc    Update user profile

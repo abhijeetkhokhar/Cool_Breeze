@@ -8,17 +8,16 @@ const OrderDetailPage = () => {
   const navigate = useNavigate();
   
   const [order, setOrder] = useState(null);
-  const [riders, setRiders] = useState([]);
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   
   // Form state
   const [newStatus, setNewStatus] = useState('');
-  const [selectedRiderId, setSelectedRiderId] = useState('');
 
   useEffect(() => {
-    const fetchOrderAndRiders = async () => {
+    const fetchOrder = async () => {
       try {
         setLoading(true);
         
@@ -27,13 +26,8 @@ const OrderDetailPage = () => {
         setOrder(orderData);
         setNewStatus(orderData.status);
         
-        if (orderData.rider) {
-          setSelectedRiderId(orderData.rider._id);
-        }
         
-        // Fetch riders for assignment
-        const { data: ridersData } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/riders`);
-        setRiders(ridersData);
+        
         
         setLoading(false);
       } catch (error) {
@@ -42,25 +36,19 @@ const OrderDetailPage = () => {
         setLoading(false);
       }
     };
-
-    fetchOrderAndRiders();
+    fetchOrder();
   }, [id]);
 
   const handleStatusUpdate = async (e) => {
     e.preventDefault();
     
-    // Validate form
-    if (newStatus === 'Shipped' && !selectedRiderId) {
-      toast.error('Please select a rider when changing status to Shipped');
-      return;
-    }
+    // No rider validation needed anymore
     
     try {
       setUpdatingStatus(true);
       
       const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/api/orders/${id}/status`, {
-        status: newStatus,
-        riderId: newStatus === 'Shipped' ? selectedRiderId : undefined
+        status: newStatus
       });
       
       setOrder(data);
@@ -193,12 +181,7 @@ const OrderDetailPage = () => {
                 </div>
               )}
               
-              {order.rider && (
-                <div>
-                  <p className="text-gray-600 text-sm">Assigned Rider</p>
-                  <p className="font-medium">{order.rider.name}</p>
-                </div>
-              )}
+              
             </div>
             
             <div className="border-t pt-4">
@@ -300,24 +283,7 @@ const OrderDetailPage = () => {
               </select>
             </div>
             
-            {newStatus === 'Shipped' && (
-              <div>
-                <label className="block text-gray-700 mb-2">Assign Rider</label>
-                <select
-                  className="input-field"
-                  value={selectedRiderId}
-                  onChange={(e) => setSelectedRiderId(e.target.value)}
-                  required={newStatus === 'Shipped'}
-                >
-                  <option value="">Select a rider</option>
-                  {riders.map((rider) => (
-                    <option key={rider._id} value={rider._id}>
-                      {rider.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            
           </div>
           
           <div className="mt-4">

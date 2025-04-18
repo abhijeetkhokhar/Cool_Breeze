@@ -9,8 +9,9 @@ const path = require('path');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const riderRoutes = require('./routes/riderRoutes');
+
 const authRoutes = require('./routes/authRoutes');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,8 +25,9 @@ app.use(morgan('dev'));
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/riders', riderRoutes);
+
 app.use('/api/auth', authRoutes);
+
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/e-commerce', {
