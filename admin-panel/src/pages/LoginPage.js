@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
   const { handleGoogleLogin, isAdmin } = useAuth();
@@ -14,27 +15,10 @@ const LoginPage = () => {
     }
   }, [isAdmin, navigate]);
 
-  // Initialize Google Sign-In
-  useEffect(() => {
-    // Load Google Sign-In API
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-      });
-
-      window.google.accounts.id.renderButton(
-        document.getElementById('google-signin-button'),
-        { theme: 'outline', size: 'large', width: 280 }
-      );
-    }
-  }, []);
-
   // Handle Google Sign-In response
-  const handleCredentialResponse = async (response) => {
+  const handleCredentialResponse = async (credentialResponse) => {
     try {
-      const result = await handleGoogleLogin(response.credential);
-      
+      const result = await handleGoogleLogin(credentialResponse.credential);
       if (result.success) {
         toast.success('Login successful!');
         navigate('/');
@@ -46,6 +30,7 @@ const LoginPage = () => {
       toast.error('Login failed. Please try again.');
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
@@ -63,7 +48,12 @@ const LoginPage = () => {
             </p>
             
             <div className="flex justify-center">
-              <div id="google-signin-button"></div>
+              <GoogleLogin
+                onSuccess={handleCredentialResponse}
+                onError={() => toast.error('Google login failed')}
+                useOneTap
+                width="280"
+              />
             </div>
           </div>
           
