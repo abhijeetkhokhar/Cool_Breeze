@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: cool-breeze-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5001
+      - key: MONGODB_URI
+        value: mongodb+srv://abhijeetkhokhar01:lp52xSX5IEY9Uw2u@cluster0.x3xunis.mongodb.net/e-commerce
+      - key: JWT_SECRET
+        value: your_jwt_secret_key_here
+      - key: GOOGLE_CLIENT_ID
+        value: 260873420352-ul04rqh1mipfpimsi97v0o1p9vs38g5m.apps.googleusercontent.com
