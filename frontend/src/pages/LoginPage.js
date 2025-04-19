@@ -19,6 +19,23 @@ const LoginPage = () => {
     }
   }, [isAuthenticated, navigate, redirect]);
 
+    // Handle Google Sign-In response
+  const handleCredentialResponse = React.useCallback(async (response) => {
+    try {
+      const result = await handleGoogleLogin(response.credential);
+      
+      if (result.success) {
+        toast.success('Login successful!');
+        navigate(redirect);
+      } else {
+        toast.error(result.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error('Login failed. Please try again.');
+    }
+  }, [handleGoogleLogin, navigate, redirect]);
+
   // Initialize Google Sign-In
   useEffect(() => {
     // Load Google Sign-In API
@@ -33,24 +50,8 @@ const LoginPage = () => {
         { theme: 'outline', size: 'large', width: 280 }
       );
     }
-  }, []);
+  }, [handleCredentialResponse]);
 
-  // Handle Google Sign-In response
-  const handleCredentialResponse = async (response) => {
-    try {
-      const result = await handleGoogleLogin(response.credential);
-      
-      if (result.success) {
-        toast.success('Login successful!');
-        navigate(redirect);
-      } else {
-        toast.error(result.message || 'Login failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Google login error:', error);
-      toast.error('Login failed. Please try again.');
-    }
-  };
 
   return (
     <div className="container mx-auto px-4 py-16">
