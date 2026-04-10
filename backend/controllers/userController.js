@@ -1,16 +1,16 @@
-const User = require('../models/userModel');
-const ApprovedEmail = require('../models/approvedEmailModel');
+const User = require("../models/userModel");
+const ApprovedEmail = require("../models/approvedEmailModel");
 
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select('-password');
+    const users = await User.find({}).select("-password");
     res.json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -19,11 +19,11 @@ const getUsers = async (req, res) => {
 // @access  Private/Admin
 const getRiders = async (req, res) => {
   try {
-    const riders = await User.find({ role: 'rider' }).select('-password');
+    const riders = await User.find({ role: "rider" }).select("-password");
     res.json(riders);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -37,17 +37,17 @@ const updateUserProfile = async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      
+
       if (req.body.address) {
         user.address = {
           street: req.body.address.street || user.address?.street,
           city: req.body.address.city || user.address?.city,
           state: req.body.address.state || user.address?.state,
           zipCode: req.body.address.zipCode || user.address?.zipCode,
-          country: req.body.address.country || user.address?.country
+          country: req.body.address.country || user.address?.country,
         };
       }
-      
+
       user.phone = req.body.phone || user.phone;
 
       const updatedUser = await user.save();
@@ -58,14 +58,14 @@ const updateUserProfile = async (req, res) => {
         email: updatedUser.email,
         role: updatedUser.role,
         address: updatedUser.address,
-        phone: updatedUser.phone
+        phone: updatedUser.phone,
       });
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -79,19 +79,19 @@ const addApprovedEmail = async (req, res) => {
     // Check if email already exists
     const existingEmail = await ApprovedEmail.findOne({ email });
     if (existingEmail) {
-      return res.status(400).json({ message: 'Email already approved' });
+      return res.status(400).json({ message: "Email already approved" });
     }
 
     const approvedEmail = new ApprovedEmail({
       email,
-      role: role || 'customer'
+      role: role || "customer",
     });
 
     const savedEmail = await approvedEmail.save();
     res.status(201).json(savedEmail);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -104,7 +104,7 @@ const getApprovedEmails = async (req, res) => {
     res.json(approvedEmails);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -114,24 +114,24 @@ const getApprovedEmails = async (req, res) => {
 const deleteApprovedEmail = async (req, res) => {
   try {
     const approvedEmail = await ApprovedEmail.findById(req.params.id);
-    
+
     if (approvedEmail) {
       await approvedEmail.remove();
-      res.json({ message: 'Approved email removed' });
+      res.json({ message: "Approved email removed" });
     } else {
-      res.status(404).json({ message: 'Approved email not found' });
+      res.status(404).json({ message: "Approved email not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
 module.exports = {
   getUsers,
-  
+  getRiders,
   updateUserProfile,
   addApprovedEmail,
   getApprovedEmails,
-  deleteApprovedEmail
+  deleteApprovedEmail,
 };

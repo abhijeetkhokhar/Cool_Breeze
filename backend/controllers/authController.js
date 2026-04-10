@@ -1,14 +1,14 @@
-const { OAuth2Client } = require('google-auth-library');
-const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
-const ApprovedEmail = require('../models/approvedEmailModel');
+const { OAuth2Client } = require("google-auth-library");
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
+const ApprovedEmail = require("../models/approvedEmailModel");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Generate JWT token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+    expiresIn: "30d",
   });
 };
 
@@ -18,31 +18,44 @@ const generateToken = (id) => {
 const googleLogin = async (req, res) => {
   try {
     const { tokenId } = req.body;
-    
+
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: tokenId,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    
+
     const { email_verified, name, email, picture } = ticket.getPayload();
-    
+
     if (!email_verified) {
-      return res.status(400).json({ message: 'Email not verified with Google' });
+      return res
+        .status(400)
+        .json({ message: "Email not verified with Google" });
     }
-    
-    // Allow any email to log in (remove approved list check)
+
+    // Check if email is in approved list
+    const approvedEmail = await ApprovedEmail.findOne({ email });
+
     // Find or create user
     let user = await User.findOne({ email });
-    
+
     if (!user) {
-      // Create new user, default role is 'rider'
+      // Determine role based on approved email list
+      let userRole = "customer"; // Default role
+      let isApproved = true;
+
+      if (approvedEmail) {
+        userRole = approvedEmail.role;
+        isApproved = true;
+      }
+
+      // Create new user
       user = await User.create({
         name,
         email,
         googleId: ticket.getUserId(),
-        role: 'rider',
-        isApproved: true
+        role: userRole,
+        isApproved: isApproved,
       });
     } else {
       // Update existing user if needed
@@ -50,25 +63,27 @@ const googleLogin = async (req, res) => {
         user.googleId = ticket.getUserId();
         await user.save();
       }
-      
-      // Ensure user is approved
-      if (!user.isApproved) {
+
+      // Update role and approval status if email is in approved list
+      if (approvedEmail && !user.isApproved) {
+        user.role = approvedEmail.role;
         user.isApproved = true;
         await user.save();
       }
     }
-    
+
     // Return user data and token
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      isApproved: user.isApproved,
       token: generateToken(user._id),
     });
   } catch (error) {
-    console.error('Google login error:', error);
-    res.status(500).json({ message: 'Server error during authentication' });
+    console.error("Google login error:", error);
+    res.status(500).json({ message: "Server error during authentication" });
   }
 };
 
@@ -78,7 +93,7 @@ const googleLogin = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    
+
     if (user) {
       res.json({
         _id: user._id,
@@ -86,14 +101,14 @@ const getUserProfile = async (req, res) => {
         email: user.email,
         role: user.role,
         address: user.address,
-        phone: user.phone
+        phone: user.phone,
       });
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
