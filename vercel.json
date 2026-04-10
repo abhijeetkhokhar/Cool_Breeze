@@ -1,12 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "admin-panel/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
-    }
-  ],
+  "buildCommand": "cd admin-panel && npm run build",
+  "outputDirectory": "admin-panel/build",
   "routes": [
     {
       "src": "/static/(.*)",
